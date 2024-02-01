@@ -71,21 +71,23 @@ class _EditImagePageState extends State<EditImagePage> {
   }
 
   _downloadEditedImage(BuildContext context) async {
-    RenderRepaintBoundary boundary =
-        _canvasKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    ui.Image image = await boundary.toImage(pixelRatio: 2.0);
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List? imageData = byteData?.buffer.asUint8List();
+    if(isImageEdited){
+      RenderRepaintBoundary boundary =
+      _canvasKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 2.0);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List? imageData = byteData?.buffer.asUint8List();
 
-    await ImageGallerySaver.saveImage(
-      (imageData?.buffer.asUint8List(
-        imageData.offsetInBytes,
-        imageData.lengthInBytes,
-      ))!,
-      quality: 100,
-    );
+      await ImageGallerySaver.saveImage(
+        (imageData?.buffer.asUint8List(
+          imageData.offsetInBytes,
+          imageData.lengthInBytes,
+        ))!,
+        quality: 100,
+      );
 
-    if (context.mounted) Toast(context: context, message: '기기 저장소에 저장된 이미지');
+      if (context.mounted) Toast(context: context, message: '기기 저장소에 저장된 이미지');
+    }
   }
 
   @override
